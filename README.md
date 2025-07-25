@@ -51,7 +51,9 @@ Returns the original URL and total clicks.
 Response:
 {
   "original_url": "https://example.com",
-  "clicks": 3
+  "clicks": 3,
+  "created_at": "2025-07-24T10:35:12"
+  
 }
 
 ## ▶️ How to Run Locally
