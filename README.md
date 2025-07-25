@@ -25,8 +25,8 @@ Request:
 
 Response:
 {
-  "short_code": "abc123",
-  "short_url": "http://localhost:5000/abc123"
+  "short_code": "rXKW7P",
+  "short_url": "http://localhost:5000/rXKW7P"
 }
 
 ---
@@ -36,7 +36,7 @@ Response:
 Redirects to the original URL if the short code exists.
 
 Example:
-GET http://localhost:5000/abc123
+GET http://localhost:5000/rXKW7P
 
 Behavior:
 - Redirects (HTTP 302) to https://example.com
