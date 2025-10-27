@@ -1,112 +1,127 @@
-# 🔗 URL Shortener Assignment
+# Bone Fracture Detection
 
-A lightweight URL shortening service built using Python and Flask. This backend-only project provides URL shortening, redirection, click tracking, and stats — all using in-memory storage without a database.
+A deep learning project that uses Convolutional Neural Networks (CNN) to detect bone fractures in X-ray images.
 
-## ✅ Features
+## Project Structure
+```
+bone_fracture_detection/
+├── config/
+│   └── config.py           # Configuration settings
+├── data/
+│   ├── __init__.py
+│   ├── dataset.py          # Dataset and DataLoader implementations
+│   └── transforms.py       # Image transformation pipelines
+├── models/
+│   ├── __init__.py
+│   ├── cnn.py             # CNN model architecture
+│   └── utils.py           # Model utility functions
+├── utils/
+│   ├── __init__.py
+│   ├── visualization.py    # Visualization functions
+│   └── metrics.py         # Evaluation metrics
+├── train/
+│   ├── __init__.py
+│   ├── trainer.py         # Training loop implementation
+│   └── validator.py       # Validation loop implementation
+├── main.py                # Entry point
+└── requirements.txt       # Project dependencies
+```
 
-- 🔐 Shortens any valid URL to a unique 6-character code  
-- 🔁 Redirects to the original URL using the short code  
-- 📊 Tracks number of times each short link is visited  
-- 📈 Returns analytics (original URL + click count)  
-- 💾 In-memory storage (resets when server restarts)  
-- ⚠️ Proper error handling and edge case coverage  
-- 🧪 Includes 5 unit tests for core functionality  
+## Features
 
-## 📦 API Endpoints
+- Custom CNN architecture optimized for bone fracture detection
+- Comprehensive data augmentation pipeline
+- Training and validation loops with progress tracking
+- Visualization tools for model performance
+- Modular and maintainable code structure
 
-### 1. POST /api/shorten
+## Requirements
 
-Shortens a valid URL.
+```
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.21.0
+tqdm>=4.65.0
+matplotlib>=3.5.0
+```
 
-Request:
-{
-  "url": "https://example.com"
-}
+## Installation
 
-Response:
-{
-  "short_code": "rXKW7P",
-  "short_url": "http://localhost:5000/rXKW7P"
-}
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/bone-fracture-detection.git
+cd bone-fracture-detection
+```
 
----
+2. Install dependencies:
+```bash
+pipenv install
+```
 
-### 2. GET /<short_code>
+## Usage
 
-Redirects to the original URL if the short code exists.
+### Data Preparation
 
-Example:
-GET http://localhost:5000/rXKW7P
+1. Organize your X-ray images in the following structure:
+```
+data/raw/Bone Fracture Detection/
+├── train/
+│   ├── fracture/
+│   └── normal/
+├── val/
+│   ├── fracture/
+│   └── normal/
+└── test/
+    ├── fracture/
+    └── normal/
+```
 
-Behavior:
-- Redirects (HTTP 302) to https://example.com
-- Increments click count for analytics
+2. Update the data paths in `config/config.py` if necessary.
 
----
+### Training
 
-### 3. GET /api/stats/<short_code>
+To train the model:
 
-Returns the original URL and total clicks.
+```bash
+python main.py
+```
 
-Response:
-{
-  "original_url": "https://example.com",
-  "clicks": 3,
-  "created_at": "2025-07-24T10:35:12"
-  
-}
+The training script will:
+- Load and preprocess the dataset
+- Train the CNN model
+- Validate performance
+- Generate visualizations
+- Save the trained model
 
-## ▶️ How to Run Locally
+### Configuration
 
-### 1. Clone the Repository
-git clone <your-repo-url>
-cd url-shortener
+Key parameters can be modified in `config/config.py`:
 
-### 2. Install Dependencies
-pip install -r requirements.txt
+```python
+IMAGE_SIZE = 128        # Input image size
+BATCH_SIZE = 16        # Batch size for training
+EPOCHS = 30            # Number of training epochs
+LEARNING_RATE = 0.001  # Learning rate for optimizer
+```
 
-### 3. Start the Server
-python app/main.py
+## Model Architecture
 
-Server will run at: http://localhost:5000
+The CNN architecture consists of:
+- Three convolutional blocks with batch normalization and max pooling
+- Multiple fully connected layers with dropout for regularization
+- Binary classification output with sigmoid activation
 
-## 🧪 Running the Tests
+## Performance Metrics
 
-This project uses pytest with 5 unit tests for:
+The model tracks:
+- Training and validation accuracy
+- Training and validation loss
+- Additional metrics including precision, recall, and F1-score
 
-- URL shortening
-- Invalid URL handling
-- Redirection logic
-- Click counting
-- Stats fetching
+## Visualization
 
-Run all tests:
-pytest
-
-## 🗂️ Project Structure
-
-url-shortener/
-├── app/
-│   ├── main.py        # Entry point & route definitions
-│   ├── utils.py       # URL validation logic
-│   └── storage.py     # In-memory store & analytics
-├── tests/
-│   └── test_basic.py  # Pytest test cases
-├── requirements.txt   # Flask, Pytest
-└── README.md          # This file
-
-## 🛠 Tech Stack
-
-- Backend: Python + Flask  
-- Testing: Pytest  
-- Storage: In-memory dictionaries (no DB)
-
-## 👤 Author
-
-Sujit Kumar  
-B.Tech , IIT Patna
-
-## 📝 Notes
-
-- This project was developed as part of a backend development assignment.
-- All data is reset on server restart (no persistence).
+The project includes visualization tools for:
+- Training history plots
+- Model predictions
+- Feature maps
+- Confusion matrices
