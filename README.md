@@ -1,127 +1,49 @@
-# Bone Fracture Detection
+# Lung Cancer Tumor Segmentation
 
-A deep learning project that uses Convolutional Neural Networks (CNN) to detect bone fractures in X-ray images.
+![](Screenshots/prediction.png)
 
-## Project Structure
-```
-bone_fracture_detection/
-├── config/
-│   └── config.py           # Configuration settings
-├── data/
-│   ├── __init__.py
-│   ├── dataset.py          # Dataset and DataLoader implementations
-│   └── transforms.py       # Image transformation pipelines
-├── models/
-│   ├── __init__.py
-│   ├── cnn.py             # CNN model architecture
-│   └── utils.py           # Model utility functions
-├── utils/
-│   ├── __init__.py
-│   ├── visualization.py    # Visualization functions
-│   └── metrics.py         # Evaluation metrics
-├── train/
-│   ├── __init__.py
-│   ├── trainer.py         # Training loop implementation
-│   └── validator.py       # Validation loop implementation
-├── main.py                # Entry point
-└── requirements.txt       # Project dependencies
-```
+## Objective
 
-## Features
+This project aims to improve lung cancer diagnosis and treatment by automating tumor segmentation using advanced machine learning algorithms for accurate and efficient detection.
 
-- Custom CNN architecture optimized for bone fracture detection
-- Comprehensive data augmentation pipeline
-- Training and validation loops with progress tracking
-- Visualization tools for model performance
-- Modular and maintainable code structure
+## Overview
 
-## Requirements
+Lung cancer, also called Bronchial Carcinoma, is a leading cause of cancer-related deaths globally, responsible for about 25% of all such deaths. Automating tumor segmentation offers two key benefits: reducing diagnostic errors by highlighting missed tumors and providing detailed tumor size and volume data, which helps in cancer staging and planning personalized treatments.
 
-```
-torch>=2.0.0
-torchvision>=0.15.0
-numpy>=1.21.0
-tqdm>=4.65.0
-matplotlib>=3.5.0
-```
+## Dataset
 
-## Installation
+The project utilizes the Medical Segmentation Decathlon dataset, comprising 64 full-body CT scans with ground truth masks. The task is to generate 2D segmentation masks for each CT scan slice to identify tumor regions.
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/bone-fracture-detection.git
-cd bone-fracture-detection
-```
+## Preprocessing
 
-2. Install dependencies:
-```bash
-pipenv install
-```
+Using the nibabel library, CT scans and their corresponding labels are loaded, with slices cropped from slice 30 onward. The data is normalized to values between 0 and 1, and the preprocessed data is saved in the `../Preprocessed/` folder.
 
-## Usage
+## Data Handling and Augmentation
 
-### Data Preparation
-
-1. Organize your X-ray images in the following structure:
-```
-data/raw/Bone Fracture Detection/
-├── train/
-│   ├── fracture/
-│   └── normal/
-├── val/
-│   ├── fracture/
-│   └── normal/
-└── test/
-    ├── fracture/
-    └── normal/
-```
-
-2. Update the data paths in `config/config.py` if necessary.
-
-### Training
-
-To train the model:
-
-```bash
-python main.py
-```
-
-The training script will:
-- Load and preprocess the dataset
-- Train the CNN model
-- Validate performance
-- Generate visualizations
-- Save the trained model
-
-### Configuration
-
-Key parameters can be modified in `config/config.py`:
-
-```python
-IMAGE_SIZE = 128        # Input image size
-BATCH_SIZE = 16        # Batch size for training
-EPOCHS = 30            # Number of training epochs
-LEARNING_RATE = 0.001  # Learning rate for optimizer
-```
+The `dataset.py` file handles loading and augmentation. The `LungDataset` class retrieves images and labels, applying transformations such as affine and elastic distortions using the `imgaug` library. This helps increase the diversity of the training data.
 
 ## Model Architecture
 
-The CNN architecture consists of:
-- Three convolutional blocks with batch normalization and max pooling
-- Multiple fully connected layers with dropout for regularization
-- Binary classification output with sigmoid activation
+The model is based on the U-Net architecture, designed for semantic segmentation tasks. It consists of four `DoubleConvBlock` layers for encoding and three `DoubleConvBlock` layers for decoding, connected via skip-connections to enhance multi-scale feature learning.
 
-## Performance Metrics
+![](Screenshots/U-Net.png)
 
-The model tracks:
-- Training and validation accuracy
-- Training and validation loss
-- Additional metrics including precision, recall, and F1-score
+## Training
 
-## Visualization
+Training is carried out in the `training.ipynb` notebook using the PyTorch Lightning framework. The model is trained for 30 epochs, with early stopping based on validation loss. To handle class imbalance, a `Weighted Random Sampler` is used, and the model is optimized using Adam with a learning rate of 1e-4.
 
-The project includes visualization tools for:
-- Training history plots
-- Model predictions
-- Feature maps
-- Confusion matrices
+![](Screenshots/Train_loss.png)
+
+## Evaluation
+
+The model was evaluated using the Dice Score on the validation set, which returned a low score of 0.0247. This indicates challenges in accurately segmenting lung cancer regions, with a high rate of false negatives and positives. Additional optimization and validation with independent datasets are necessary before clinical use.
+
+## Results and Visualization
+
+Sample CT scan slices, along with ground truth masks and predicted segmentation, are visualized to assess the model’s performance in identifying tumor regions.
+
+![](Screenshots/actual_vs_pred.png)
+
+## Conclusion
+
+The project demonstrates the use of deep learning, specifically the U-Net architecture, for lung cancer tumor segmentation. Despite the initial low Dice Score, the results emphasize the need for further refinement, larger datasets, and collaboration with medical professionals to improve diagnostic accuracy. Continued research is essential to enhance the model’s performance and ensure its clinical viability in lung cancer treatment.
